@@ -34,7 +34,7 @@ outputs = ["Reveal"]
 1. Library author already has a scikit-learn compatible estimator
 2. {{< frag c="Contributor using D3M's framework wants to add primitive" >}}
 3. {{< frag c="Contributor writes the types for hyper-parameter and attributes" >}}
-4. {{< frag c="Contributor adds additional Metadata if necessary" >}}
+4. {{< frag c="Contributor adds additional metadata" >}}
 5. {{< frag c="Run auto-generation script developed by D3M to generate primitive" >}}
 
 ---
@@ -45,12 +45,12 @@ outputs = ["Reveal"]
 ```bash
 pip install d3m_estimator_to_primitive
 
-d3m_estimator_to_primitive --meta additional_metadata.json xgboost.XGBClassifier
+d3m_estimator_to_primitive --meta additional_metadata.yaml xgboost.XGBClassifier
 ```
 
 would generate a `XGBClassifierPrimitive.py`
 
-## **Allow ANY Scikit-learn compatible estimator be a primitive**
+### **Allow ANY Scikit-learn compatible estimator be a primitive**
 
 ---
 
@@ -122,7 +122,7 @@ class KMeans:
 
 {{% section %}}
 
-# 4. Contributor Adds Additional metadata if necessary
+# 4. Contributor Adds Additional metadata
 
 ### **We should keep this at to a minimum**
 
@@ -131,6 +131,7 @@ class KMeans:
 # Additional metadata we need now:
 
 - Specify hyperparams_to_tune
+- Specify search spaces (Optional)
 - **Private attributes**
 
 ---
@@ -140,6 +141,46 @@ class KMeans:
 - Unless library authors specify this, the D3M contributor would have to
 - Tuning and Control Parameters
 - This can be another barrier
+
+---
+
+# Specify search spaces (Optional)
+
+---
+
+## sksearchspace
+### [github.com/thomasjpfan/sksearchspace](https://github.com/thomasjpfan/sksearchspace)
+
+> Scikit-learn Search Space Configurations with curated search spaces for scikit-learn estimators.
+
+---
+
+# sksearchspace
+
+sksearchspace uses ConfigSpace for sampling.
+
+```python{1-4|6-7}
+from sksearchspace import SearchSpace
+from sklearn.tree import DecisionTreeClassifier
+
+estimator_space = SearchSpace.for_sklearn_estimator(DecisionTreeClassifier, seed=42)
+
+estimator_space.sample()
+# {'criterion': 'entropy','min_samples_leaf': 15, 'min_samples_split': 11}
+```
+
+---
+
+# Search spaces in ML
+
+ML ecosystem has many frameworks for defining spaces
+
+- ray tune - https://docs.ray.io/en/master/tune/index.html
+- keras-tuner - https://keras-team.github.io/keras-tuner/
+- ConfigSpace - https://automl.github.io/ConfigSpace/master/
+- scikit-learn - uses dicts + scipy distributions
+
+### Requires tool to translate into D3M Hyperparameters
 
 ---
 
@@ -178,7 +219,7 @@ D3M uses `set_params` and `get_params` to serialized and deserialize the primiti
 
 ---
 
-# Possible Solution
+# First Solution
 
 - Treat the estimator like a semi-transparent box
 - Provide access to the public attributes
@@ -188,18 +229,34 @@ D3M uses `set_params` and `get_params` to serialized and deserialize the primiti
 self._learner.set_params(_Booster=params['booster'], n_classes_=params['n_classes'],
 ```
 
+- **May break downstream code**
+
+---
+
+# Second Solution
+
+- Figure out the private attributes by fitting the estimator and inspecting the model
+- Should work 95% of the time.
+- **Will not break down stream code**
+
 {{% /section %}}
 
 ---
 
 {{% section %}}
 
+# Work That Has Been Done
+
+**[github.com/thomasjpfan/sk-typing](https://github.com/thomasjpfan/sk-typing)**: Specify typing for all scikit-learn estimators
+
+**[github.com/thomasjpfan/sksearchspace](https://github.com/thomasjpfan/sksearchspace)**: Specify search spaces for all scikit-learn estimators
+
+---
+
 # Ongoing Work
 
-- Trying to reuse as much as possible from `sklearn-wrap`
-- **Rewrite some of sklearn-wrap to not depend on private attributes**
-- `sk-typing` does not contain bounds
-    - Can be added with Python's `Annotated` but may introduce more difficult
+- Try to reuse as much as possible from `sklearn-wrap`
+- Specify and document how to write the additional metadata
 
 ---
 
@@ -209,55 +266,11 @@ self._learner.set_params(_Booster=params['booster'], n_classes_=params['n_classe
 ```bash
 pip install d3m_estimator_to_primitive
 
-d3m_estimator_to_primitive --meta additional_metadata.json xgboost.XGBClassifier
+d3m_estimator_to_primitive --meta additional_metadata.yaml xgboost.XGBClassifier
 ```
 
 would generate a `XGBClassifierPrimitive.py`
 
-## **Allow ANY Scikit-learn compatible estimator be a primitive**
-
-{{% /section %}}
-
----
-
-{{% section %}}
-
-# Future extensions (EXTRA SLIDES)
-
----
-
-# sksearchspace
-### [github.com/thomasjpfan/sksearchspace](https://github.com/thomasjpfan/sksearchspace)
-
-> Scikit-learn Search Space Configurations with curated search spaces for scikit-learn estimators.
-
----
-
-# sksearchspace
-
-sksearchspace uses ConfigSpace for sampling.
-
-```python{1-4|6-7}
-from sksearchspace import SearchSpace
-from sklearn.tree import DecisionTreeClassifier
-
-estimator_space = SearchSpace.for_sklearn_estimator(DecisionTreeClassifier, seed=42)
-
-estimator_space.sample()
-# {'criterion': 'entropy','min_samples_leaf': 15, 'min_samples_split': 11}
-```
-
----
-
-# Search spaces in ML
-
-ML ecosystem has many frameworks for defining spaces
-
-- ray tune - https://docs.ray.io/en/master/tune/index.html
-- keras-tuner - https://keras-team.github.io/keras-tuner/
-- ConfigSpace - https://automl.github.io/ConfigSpace/master/
-- scikit-learn - uses dicts + scipy distributions
-
-### Requires tool to translate to D3M hyperparmaters
+### **Allow ANY Scikit-learn compatible estimator be a primitive**
 
 {{% /section %}}
