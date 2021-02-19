@@ -3,7 +3,7 @@ disableKinds = ["taxonomy", "term", "sitemap", "RSS"]
 baseURL = "https://thomasjpfan.github.io/winter-d3m-2021-sklearn-interop/"
 
 [params]
-useMath = true
+useMath = false
 
 [outputFormats.Reveal]
 baseName = "index"

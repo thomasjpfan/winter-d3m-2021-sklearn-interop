@@ -45,7 +45,7 @@ outputs = ["Reveal"]
 ```bash
 pip install d3m_estimator_to_primitive
 
-d3m_estimator_to_primitive --meta additional_metadata.yaml xgboost.XGBClassifier
+d3m_estimator_to_primitive --meta additional_metadata.json xgboost.XGBClassifier
 ```
 
 would generate a `XGBClassifierPrimitive.py`
@@ -56,8 +56,9 @@ would generate a `XGBClassifierPrimitive.py`
 
 # What has been developed?
 
-- We already have some of this work in **sklearn-wrap**
-- How do we leverage this code?
+- **[github.com/thomasjpfan/sk-typing](https://github.com/thomasjpfan/sk-typing)**: Specify typing for all scikit-learn estimators
+- **[github.com/thomasjpfan/sksearchspace](https://github.com/thomasjpfan/sksearchspace)**: Specify search spaces for all scikit-learn estimators
+- **[gitlab.com/datadrivendiscovery/sklearn-wrap](https://gitlab.com/datadrivendiscovery/sklearn-wrap)**: Wrapped D3M primitives.
 
 ---
 
@@ -68,7 +69,7 @@ would generate a `XGBClassifierPrimitive.py`
 
 {{% section %}}
 
-# 3. Contributor writes the types for hyper-parameter and attributes
+# 3. Contributor writes the types for hyper-parameters and attributes
 
 ---
 
@@ -139,8 +140,7 @@ class KMeans:
 # Specify `hyperparameters_to_tune`
 
 - Unless library authors specify this, the D3M contributor would have to
-- Tuning and Control Parameters
-- This can be another barrier
+- Tuning and Resource Parameters
 
 ---
 
@@ -198,9 +198,9 @@ class Params(params.Params):
     ...
 ```
 
-- Attributes starting with `_` are undocumented.
+- Attributes starting with `_` are undocumented
 - Brittle: private attributes can change without warning
-- Providing this metadata requires one to dive into the source code
+- May require diving into source code
 - Huge barrier for creating primitives
 
 ---
@@ -247,9 +247,9 @@ self._learner.set_params(_Booster=params['booster'], n_classes_=params['n_classe
 
 # Work That Has Been Done
 
-**[github.com/thomasjpfan/sk-typing](https://github.com/thomasjpfan/sk-typing)**: Specify typing for all scikit-learn estimators
-
-**[github.com/thomasjpfan/sksearchspace](https://github.com/thomasjpfan/sksearchspace)**: Specify search spaces for all scikit-learn estimators
+- **[github.com/thomasjpfan/sk-typing](https://github.com/thomasjpfan/sk-typing)**: Specify typing for all scikit-learn estimators
+- **[github.com/thomasjpfan/sksearchspace](https://github.com/thomasjpfan/sksearchspace)**: Specify search spaces for all scikit-learn estimators
+- **[gitlab.com/datadrivendiscovery/sklearn-wrap](https://gitlab.com/datadrivendiscovery/sklearn-wrap)**: Wrapped D3M primitives.
 
 ---
 
@@ -266,7 +266,7 @@ self._learner.set_params(_Booster=params['booster'], n_classes_=params['n_classe
 ```bash
 pip install d3m_estimator_to_primitive
 
-d3m_estimator_to_primitive --meta additional_metadata.yaml xgboost.XGBClassifier
+d3m_estimator_to_primitive --meta additional_metadata.json xgboost.XGBClassifier
 ```
 
 would generate a `XGBClassifierPrimitive.py`
