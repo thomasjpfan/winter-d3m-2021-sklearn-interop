@@ -22,9 +22,7 @@
     - Can be defined in a yaml as shown in [d3m_estimator_to_primitive](https://github.com/thomasjpfan/d3m_estimator_to_primitive).
     - This was manually curated in [sksearchspace](https://github.com/thomasjpfan/sksearchspace/tree/0.22.2.post1)
     - It was shown that we can automatically perform hyperparameter searches by using  curated search spaces using the scikit-learn API. Using a `AutoHalvingRandomSearchCV` from [sksearchspace](https://github.com/thomasjpfan/sksearchspace/tree/AutoHalvingRandomSearchCV_0.24.dev0).
-8. Obtain the input data types of a estimator. This can be done with scikit-learn, using estimator tags:
-
-    - For encoders, they expect categorical data:
+8. Obtain the input data types of a estimator. This can be done with scikit-learn, using estimator tags. For encoders, they expect categorical data:
 
 ```python
 from sklearn.preprocessing import OneHotEncoder
@@ -33,7 +31,7 @@ ohe._get_tags()['X_types']
 # ['categorical']
 ```
 
-    - For vectorizers that expect string input:
+For vectorizers that expect string input:
 
 ```python
 from sklearn.feature_extraction.text import CountVectorizer
