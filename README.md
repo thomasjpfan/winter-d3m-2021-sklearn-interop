@@ -40,6 +40,8 @@ vect._get_tags()['X_types']
 # ['string']
 ```
 
+9. Transformers that can remove a feature such as the `Imputers` needs an API to show which features are removed.
+
 ## License
 
 This repo is under the [MIT License](LICENSE).
