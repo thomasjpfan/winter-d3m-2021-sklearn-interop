@@ -26,7 +26,7 @@
 
 ```python
 from sklearn.preprocessing import OneHotEncoder
-ohe =OneHotEncoder()
+ohe = OneHotEncoder()
 ohe._get_tags()['X_types']
 # ['categorical']
 ```
